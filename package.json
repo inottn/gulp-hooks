@@ -1,0 +1,52 @@
+{
+  "name": "gulp-hooks",
+  "version": "0.0.1",
+  "packageManager": "pnpm@8.6.5",
+  "description": "Execute injected hooks in the workflow of gulp.",
+  "author": "inottn<https://github.com/inottn>",
+  "homepage": "https://github.com/inottn/gulp-hooks",
+  "type": "module",
+  "exports": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "rimraf ./lib && tsc",
+    "lint": "eslint ./src --ext .js,.ts,.mjs,.cjs",
+    "prepare": "husky install"
+  },
+  "nano-staged": {
+    "*.{ts,tsx,js,mjs,less}": "prettier --write",
+    "*.{ts,tsx,js,mjs}": "eslint --fix"
+  },
+  "keywords": [
+    "js",
+    "gulp",
+    "hooks",
+    "typescript"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/inottn/gulp-hooks/issues"
+  },
+  "dependencies": {
+    "@inottn/fp-utils": "^0.0.4",
+    "gulp-match": "^1.1.0",
+    "through2": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/gulp-match": "^1.1.2",
+    "@types/through2": "^2.0.38",
+    "@types/vinyl": "^2.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": "^8.0.3",
+    "nano-staged": "^0.8.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
+  }
+}
