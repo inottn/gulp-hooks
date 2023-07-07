@@ -6,9 +6,14 @@
   "author": "inottn<https://github.com/inottn>",
   "homepage": "https://github.com/inottn/gulp-hooks",
   "type": "module",
+  "types": "lib/index.d.ts",
+  "module": "lib/index.js",
   "exports": {
-    "import": "./lib/index.js",
-    "require": "./lib/index.cjs"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
   },
   "files": [
     "lib"
@@ -19,6 +24,9 @@
     "build": "rimraf ./lib && tsc && npm run build:cjs",
     "lint": "eslint ./src --ext .js,.ts,.mjs,.cjs",
     "prepare": "husky install"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "nano-staged": {
     "*.{ts,tsx,js,mjs,less}": "prettier --write",
@@ -33,6 +41,10 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/inottn/gulp-hooks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:inottn/gulp-hooks.git"
   },
   "dependencies": {
     "@inottn/fp-utils": "^0.0.4",
