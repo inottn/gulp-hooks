@@ -1,6 +1,6 @@
 {
   "name": "gulp-hooks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "pnpm@8.6.5",
   "description": "Execute injected hooks in the workflow of gulp.",
   "author": "inottn<https://github.com/inottn>",
