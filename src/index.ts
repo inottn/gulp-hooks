@@ -1,16 +1,20 @@
+import BaseStream from 'node:stream';
+import { withResolvers } from '@inottn/fp-utils';
 import match from 'gulp-match';
 import through2 from 'through2';
+import type { Transform } from 'node:stream';
 import type { MatchCondition } from 'gulp-match';
 import type File from 'vinyl';
 
-type ProcessFileFn = <T = File>(file: T, extraParams?: any) => T | Promise<T>;
+type ProcessFn = <T = File | Transform>(
+  file: File,
+  extraParams?: any,
+) => T | Promise<T>;
 type ConditionType = MatchCondition;
-type NormalizedHookType = { condition: ConditionType; fn: ProcessFileFn };
+type NormalizedHookType = { condition: ConditionType; fn: ProcessFn };
 type NormalizedHooksType = NormalizedHookType[];
 
-export type HookType =
-  | ProcessFileFn
-  | { condition?: ConditionType; fn: ProcessFileFn };
+export type HookType = ProcessFn | { condition?: ConditionType; fn: ProcessFn };
 export type HooksType = HookType[];
 
 const HooksMap = new Map<string, NormalizedHooksType>();
@@ -23,6 +27,19 @@ const normalizeHook = (hook: HookType): NormalizedHookType => {
 const normalizeHooks = (hooks: HookType | HooksType): NormalizedHooksType => {
   if (Array.isArray(hooks)) return hooks.map(normalizeHook);
   return [normalizeHook(hooks)];
+};
+
+const transformStream = (stream: Transform, file: File) => {
+  const { resolve, reject, promise } = withResolvers<File>();
+
+  const resolveListener = () => resolve(file);
+
+  stream.write(file);
+  stream.once('data', resolveListener);
+  stream.once('end', resolveListener);
+  stream.once('error', reject);
+
+  return promise;
 };
 
 export const registerHooks = (name: string, newHooks: HookType | HooksType) => {
@@ -54,7 +71,13 @@ export default (name: string, extraParams?: any) => {
 
         if (condition) {
           const result = await fn(file, extraParams);
-          if (result) file = result;
+
+          if (result) {
+            file =
+              result instanceof BaseStream
+                ? await transformStream(result, file)
+                : result;
+          }
         }
       }
     } catch (err) {
