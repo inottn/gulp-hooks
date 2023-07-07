@@ -6,13 +6,17 @@
   "author": "inottn<https://github.com/inottn>",
   "homepage": "https://github.com/inottn/gulp-hooks",
   "type": "module",
-  "exports": "./lib/index.js",
+  "exports": {
+    "import": "./lib/index.js",
+    "require": "./lib/index.cjs"
+  },
   "files": [
     "lib"
   ],
   "scripts": {
     "dev": "tsc --watch",
-    "build": "rimraf ./lib && tsc",
+    "build:cjs": "rollup lib/index.js --file lib/index.cjs --format cjs",
+    "build": "rimraf ./lib && tsc && npm run build:cjs",
     "lint": "eslint ./src --ext .js,.ts,.mjs,.cjs",
     "prepare": "husky install"
   },
@@ -47,6 +51,7 @@
     "nano-staged": "^0.8.0",
     "prettier": "^3.0.0",
     "rimraf": "^5.0.1",
+    "rollup": "^3.26.2",
     "typescript": "^5.1.6"
   }
 }
