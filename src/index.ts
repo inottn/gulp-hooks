@@ -1,5 +1,5 @@
 import BaseStream from 'node:stream';
-import { withResolvers } from '@inottn/fp-utils';
+import { withResolvers, isFunction } from '@inottn/fp-utils';
 import match from 'gulp-match';
 import through2 from 'through2';
 import type { Transform } from 'node:stream';
@@ -31,7 +31,6 @@ const normalizeHooks = (hooks: HookType | HooksType): NormalizedHooksType => {
 
 const transformStream = (stream: Transform, file: File) => {
   const { resolve, reject, promise } = withResolvers<File>();
-
   const resolveListener = () => resolve(file);
 
   stream.write(file);
@@ -42,13 +41,41 @@ const transformStream = (stream: Transform, file: File) => {
   return promise;
 };
 
-export const registerHooks = (name: string, newHooks: HookType | HooksType) => {
-  if (!newHooks) return;
+export const registerHooks = (name: string, hooks: HookType | HooksType) => {
+  if (!hooks) return;
 
-  const hooks = HooksMap.get(name) ?? [];
+  const existHooks = HooksMap.get(name) ?? [];
 
-  hooks.push(...normalizeHooks(newHooks));
-  HooksMap.set(name, hooks);
+  existHooks.push(...normalizeHooks(hooks));
+  HooksMap.set(name, existHooks);
+};
+
+export const unregisterHooks = (
+  name?: string,
+  hooks?: HookType | HooksType,
+) => {
+  if (!name) {
+    HooksMap.clear();
+    return;
+  }
+
+  if (!hooks) {
+    HooksMap.delete(name);
+    return;
+  }
+
+  if (!HooksMap.has(name)) return;
+
+  const existHooks = HooksMap.get(name);
+
+  HooksMap.set(
+    name,
+    existHooks.filter((existHook) => {
+      return !(Array.isArray(hooks) ? hooks : [hooks]).some((hook) =>
+        isFunction(hook) ? hook === existHook.fn : hook.fn === existHook.fn,
+      );
+    }),
+  );
 };
 
 export default (name: string, extraParams?: any) => {
