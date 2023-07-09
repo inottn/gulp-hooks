@@ -6,10 +6,11 @@ import type { Transform } from 'node:stream';
 import type { MatchCondition } from 'gulp-match';
 import type File from 'vinyl';
 
+type MaybePromise<T> = T | Promise<T>;
 type ProcessFn = <T = File | Transform>(
   file: File,
   extraParams?: any,
-) => T | Promise<T>;
+) => MaybePromise<void | T>;
 type ConditionType = MatchCondition;
 type NormalizedHookType = { condition: ConditionType; fn: ProcessFn };
 type NormalizedHooksType = NormalizedHookType[];
