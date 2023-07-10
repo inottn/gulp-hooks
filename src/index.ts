@@ -79,7 +79,7 @@ export const unregisterHooks = (
   );
 };
 
-export default (name: string, extraParams?: any) => {
+export const tapHooks = (name: string, extraParams?: any) => {
   const hooks = HooksMap.get(name);
 
   return through2.obj(async (file: File, enc, cb) => {
@@ -115,3 +115,5 @@ export default (name: string, extraParams?: any) => {
     cb(null, file);
   });
 };
+
+export default tapHooks;
