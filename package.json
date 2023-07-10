@@ -48,7 +48,7 @@
     "url": "git@github.com:inottn/gulp-hooks.git"
   },
   "dependencies": {
-    "@inottn/fp-utils": "^0.0.4",
+    "@inottn/fp-utils": "^0.0.6",
     "gulp-match": "^1.1.0",
     "through2": "^4.0.2"
   },

@@ -1,5 +1,5 @@
 import BaseStream from 'node:stream';
-import { withResolvers, isFunction } from '@inottn/fp-utils';
+import { withResolvers, isFunction, toArray } from '@inottn/fp-utils';
 import match from 'gulp-match';
 import through2 from 'through2';
 import type { Transform } from 'node:stream';
@@ -72,7 +72,7 @@ export const unregisterHooks = (
   HooksMap.set(
     name,
     existHooks.filter((existHook) => {
-      return !(Array.isArray(hooks) ? hooks : [hooks]).some((hook) =>
+      return toArray(hooks).some((hook) =>
         isFunction(hook) ? hook === existHook.fn : hook.fn === existHook.fn,
       );
     }),
