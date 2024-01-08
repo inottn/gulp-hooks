@@ -68,6 +68,6 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.28.0",
     "typescript": "^5.1.6",
-    "vitest": "^0.34.1"
+    "vitest": "^1.1.3"
   }
 }
